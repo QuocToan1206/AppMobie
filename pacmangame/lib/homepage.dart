@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:pacmangame/an.dart';
 import 'package:pacmangame/nhanvat.dart';
@@ -22,6 +24,16 @@ class _HomePageState extends State<HomePage> {
     100,101,102,103,114,125,116,105,106,107,108,
     123,134,145,129,140,127,147,148,149,151,
   ];
+
+  void startGame(){
+    Timer.periodic(Duration(milliseconds: 300), (timer) {
+      if(!barriers.contains(nv+1)){
+        setState(() {
+          nv++;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +75,8 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment:  MainAxisAlignment.spaceEvenly,
                   children: [
                     Text("Điểm: ",style: TextStyle(color: Colors.white, fontSize: 40),),
-                    Text("P L A Y ", style: TextStyle(color: Colors.white, fontSize: 40),),
+                    GestureDetector(
+                        onTap: startGame ,child: Text("P L A Y ", style: TextStyle(color: Colors.white, fontSize: 40),)),
                   ],
                   ),
               ))
