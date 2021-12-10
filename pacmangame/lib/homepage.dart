@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pacmangame/an.dart';
+import 'package:pacmangame/nhanvat.dart';
 import 'package:pacmangame/vatcan.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,6 +14,7 @@ class _HomePageState extends State<HomePage> {
 
   static int numberInRow = 11;
   int numberOfSquares = numberInRow * 17;
+  int nv = numberInRow * 14 + 1;
 
   List<int> barriers = [
     0,1,2,3,4,5,6,7,8,9,10,11,22,33,44,55,66,77,88,99,110,121,132,143,154,165,166,167,168,169,170,171,172,173,174,175,21,32,43,54,65,76,87,98,109,120,131,142,153,164,
@@ -28,21 +31,26 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         children: [
           Expanded(
-            flex: 5,
+            flex: 6,
               child: Container(
                 child: GridView.builder(
                   physics:  NeverScrollableScrollPhysics(), // không cho di chuyển lưới bằng tay
                     itemCount: numberOfSquares, gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: numberInRow),
                     itemBuilder: (BuildContext contex, int index){
-                      if(barriers.contains((index))){
+                      if(nv == index){
+                        return NhanVat();
+
+                      }else if(barriers.contains((index))){
                         return Vatcan(
-                          color: Colors.blue[900],
-                          child: Text(index.toString()),
+                          innerColor: Colors.blue[500],
+                          outerColor: Colors.blue[800],
+                          //child: Text(index.toString()),
                         );
                       }else{
-                        return Vatcan(
-                          color: Colors.black,
-                          child: Text(index.toString()),
+                        return doan(
+                          innerColor: Colors.yellow[500],
+                          outerColor: Colors.black,
+                          //child: Text(index.toString()),
                         );
                       }
                     }),
