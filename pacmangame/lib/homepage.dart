@@ -16,7 +16,10 @@ class _HomePageState extends State<HomePage> {
   static int numberInRow = 11;
   int numberOfSquares = numberInRow * 17;
   int nv = numberInRow * 15 + 1;
-
+  bool nvclose = false;
+  List<int> foods = [];
+  bool pregame = true;
+  int score = 0;
   List<int> barriers = [
     0,
     1,
@@ -121,14 +124,13 @@ class _HomePageState extends State<HomePage> {
     151,
     162
   ];
-  List<int> foods = [];
-  bool pregame = true;
   void startGame() {
     pregame = false;
     getFood();
     Timer.periodic(Duration(milliseconds: 300), (timer) {
       if (foods.contains(nv)) {
         foods.remove(nv);
+        score++;
       }
 
       if (!barriers.contains(nv + 1)) {
@@ -193,7 +195,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Text(
-                  "Điểm: ",
+                  "Điểm: " + score.toString(),
                   style: TextStyle(color: Colors.white, fontSize: 40),
                 ),
                 GestureDetector(
