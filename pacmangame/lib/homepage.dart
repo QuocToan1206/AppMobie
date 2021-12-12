@@ -44,6 +44,16 @@ class _HomePageState extends State<HomePage> {
     143,
     154,
     165,
+    166,
+    167,
+    168,
+    169,
+    170,
+    171,
+    172,
+    173,
+    174,
+    175,
     21,
     32,
     43,
@@ -104,22 +114,6 @@ class _HomePageState extends State<HomePage> {
     148,
     149,
     151,
-    176,
-    177,
-    178,
-    179,
-    180,
-    181,
-    182,
-    183,
-    184,
-    185,
-    186,
-    175,
-    156,
-    158,
-    160,
-    162,
   ];
   List<int> foods = [];
 
@@ -173,16 +167,15 @@ class _HomePageState extends State<HomePage> {
                         );
                       } else if (!foods.contains(index)) {
                         return doan(
-                          innerColor: Colors.yellow[500],
+                          innerColor: Colors.black,
                           outerColor: Colors.black,
                           //child: Text(index.toString()),
                         );
                       } else {
-                        return Padding(
-                            padding: const EdgeInsets.all(1.0),
-                            child: Container(
-                                color: Colors.black,
-                                child: Text(index.toString())));
+                        return doan(
+                          innerColor: Colors.yellow[500],
+                          outerColor: Colors.black,
+                        );
                       }
                     }),
               )),
