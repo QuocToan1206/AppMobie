@@ -44,16 +44,18 @@ class _HomePageState extends State<HomePage> {
     143,
     154,
     165,
-    166,
-    167,
-    168,
-    169,
-    170,
-    171,
-    172,
-    173,
-    174,
     175,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
     21,
     32,
     43,
@@ -107,17 +109,22 @@ class _HomePageState extends State<HomePage> {
     123,
     134,
     145,
+    156,
     129,
     140,
     127,
+    158,
     147,
     148,
     149,
+    160,
     151,
+    162
   ];
   List<int> foods = [];
-
+  bool pregame = true;
   void startGame() {
+    pregame = false;
     getFood();
     Timer.periodic(Duration(milliseconds: 300), (timer) {
       if (foods.contains(nv)) {
@@ -163,17 +170,17 @@ class _HomePageState extends State<HomePage> {
                         return Vatcan(
                           innerColor: Colors.blue[500],
                           outerColor: Colors.blue[800],
-                          //child: Text(index.toString()),
+                          // child: Text(index.toString()),
                         );
-                      } else if (!foods.contains(index)) {
+                      } else if (foods.contains(index) || pregame) {
                         return doan(
-                          innerColor: Colors.black,
+                          innerColor: Colors.yellow[500],
                           outerColor: Colors.black,
-                          //child: Text(index.toString()),
+                          // child: Text(index.toString()),
                         );
                       } else {
                         return doan(
-                          innerColor: Colors.yellow[500],
+                          innerColor: Colors.black,
                           outerColor: Colors.black,
                         );
                       }
