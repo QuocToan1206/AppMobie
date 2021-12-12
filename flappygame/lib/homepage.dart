@@ -13,7 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static double amongaxis = 0;
-  double time = 1;
+  double time = 0;
   double height =0;
   double intiaHeight =amongaxis;
   bool gameHasStarted = false; // cài đặt trò chơi
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     // di chuyển vật cản trên
     for (int i = 0; i < vatcan1.length; i++){
       setState(() {
-        vatcan1[i] -=0.05;
+        vatcan1[i] -=0.018;
       });
 
       if(vatcan1[i] < -1.5 ){
@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
     // di chuyển vật cản dưới
     for (int i = 0; i < vatcan2.length; i++){
       setState(() {
-        vatcan2[i] -=0.05;
+        vatcan2[i] -=0.018;
       });
 
       if(vatcan2[i] < -1.5 ){
@@ -70,10 +70,55 @@ class _HomePageState extends State<HomePage> {
 
     });
   }
+  void resetGame(){
+    Navigator.pop(context); // loại bỏ hộp thoại cảnh báo
+    // cho tất cả lại thành ban đầu
+    setState(() {
+      amongaxis = 0;
+      gameHasStarted = false;
+      time =0;
+      intiaHeight = amongaxis;
+      vatcan1 = [2,2+1.5];
+      vatcan2 = [2,2+1.5];
+    });
+  }
+  void _showDialog(){
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext contex){
+        return AlertDialog(
+          backgroundColor:  Colors.brown,
+          title: Center(
+            child: Text(
+              " E N D G A M E ",
+              style: TextStyle(color:  Colors.white),
+            ),
+          ),
+          actions: [
+            GestureDetector(
+              onTap: resetGame,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Container(
+                  padding: EdgeInsets.all(7),
+                  color: Colors.white,
+                  child: Text(
+                    'PLAY AGAIN',
+                    style: TextStyle(color: Colors.brown),
+                  ),
+                ),
+              ),
+            )
+          ],
+        );
+      }
+    );
+  }
 
   void startGame(){
     gameHasStarted = true;
-    Timer.periodic(Duration(milliseconds: 50), (timer) {
+    Timer.periodic(Duration(milliseconds: 10), (timer) {
 
       //tính toán độ rơi nhân vật khi click chuột vào
       height = trongluc * time * time + vantoc * time;
@@ -85,7 +130,7 @@ class _HomePageState extends State<HomePage> {
       //kiểm tra nhân vật đã chết chưa
       if(AmongDead()){
         timer.cancel();
-        //_showDialog();
+        _showDialog();
       }
 
       moveMap();
