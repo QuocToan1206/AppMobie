@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flappygame/Among.dart';
+import 'package:flappygame/Screen.dart';
 import 'package:flappygame/vatcan.dart';
 import 'package:flutter/material.dart';
 
@@ -12,12 +13,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static double amongaxis = 0;
-  double time = 0;
+  double time = 1;
   double height =0;
   double intiaHeight =amongaxis;
   bool gameHasStarted = false; // cài đặt trò chơi
   double amongWidth = 0.1 ; // chiều rộng
   double amongHeight = 0.1 ; // chiều dài
+  double trongluc = -4.9;
+  double vantoc = 2.8;
   //static double x1 = 1;
   //double x2 = x1 + 1.5;
 
@@ -73,12 +76,17 @@ class _HomePageState extends State<HomePage> {
     Timer.periodic(Duration(milliseconds: 50), (timer) {
 
       //tính toán độ rơi nhân vật khi click chuột vào
-      time += 0.04;
-      height = -4.9 *time*time+2.8*time;
+      height = trongluc * time * time + vantoc * time;
+      /*time += 0.04;
+      height = -4.9 *time*time+2.8*time;*/
       setState(() {
         amongaxis = intiaHeight - height;
-
       });
+      //kiểm tra nhân vật đã chết chưa
+      if(AmongDead()){
+        timer.cancel();
+        //_showDialog();
+      }
 
       moveMap();
       time += 0.01;
@@ -91,10 +99,31 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  bool AmongDead(){
+    //kiểm tra xem nhân vật đã chạm đầu hay cuối màn hình
+    if (amongaxis < -1 || amongaxis >1){
+      return true;
+    }
+    // chạm vào rào cản
+    // kiểm tra xem nhân vật nằm trong tọa độ rào cản ko
+    for( int i = 0; i < vatcan1.length; i++){
+      if(vatcan1[i] <= amongWidth &&
+      vatcan1[i] + vatcanWidth1 >= amongWidth &&
+          (amongaxis <= -1 + vatcanHeight1[i][0] ||
+              amongaxis + amongHeight >= 1 - vatcanHeight1[i][1]
+          )
+      ){
+        return true;
+      }
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       //Nhấn được toàn màn hình
+      //onTap: gameHasStarted ? jump() : startGame,
       onTap: (){
         if (gameHasStarted){
           jump();
@@ -119,12 +148,7 @@ class _HomePageState extends State<HomePage> {
                           amongWidth: amongWidth
                       ),
 
-                      Container(
-                        alignment: Alignment(0,-0.2),
-                        child: gameHasStarted ? Text(" ") : Text("NHẤN ĐỂ BẮT ĐẦU",
-                          style: TextStyle(fontSize: 20, color: Colors.white),
-                        ),
-                      ),
+                      Screen(gameHasStarted),
 
                       //Tạo vật cản
                       //vật cản 1 top
