@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
     123,134,145,129,140,127,147,148,149,151,
   ];
 
+  //bắt đầu
   void startGame(){
     Timer.periodic(Duration(milliseconds: 300), (timer) {
       if(!barriers.contains(nv+1)){
@@ -76,7 +77,8 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     Text("Điểm: ",style: TextStyle(color: Colors.white, fontSize: 40),),
                     GestureDetector(
-                        onTap: startGame ,child: Text("P L A Y ", style: TextStyle(color: Colors.white, fontSize: 40),)),
+                        onTap: startGame ,//nhấn vào chữ bắt đầu để chạy lệnh
+                        child: Text("P L A Y ", style: TextStyle(color: Colors.white, fontSize: 40),)),
                   ],
                   ),
               ))

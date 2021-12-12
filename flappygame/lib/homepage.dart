@@ -15,9 +15,50 @@ class _HomePageState extends State<HomePage> {
   double time = 0;
   double height =0;
   double intiaHeight =amongaxis;
-  bool gameHasStarted = false;
-  static double x1 = 1;
-  double x2 = x1 + 1.5;
+  bool gameHasStarted = false; // cài đặt trò chơi
+  double amongWidth = 0.1 ; // chiều rộng
+  double amongHeight = 0.1 ; // chiều dài
+  //static double x1 = 1;
+  //double x2 = x1 + 1.5;
+
+  //khai báo biến rào cản
+  static List<double> vatcan1 = [2, 2 +1.5];
+  static double vatcanWidth1 = 0.5;
+  List<List<double>> vatcanHeight1 =[
+    [0.6, 0.4],
+    [0.4, 0.6]
+  ];
+
+  static List<double> vatcan2 = [2, 2 +1.5];
+  static double vatcanWidth2 = 0.5;
+  List<List<double>> vatcanHeight2 =[
+    [0.6, 0.4],
+    [0.4, 0.6]
+  ];
+
+  //di chuyển vật cản
+  void moveMap(){
+    // di chuyển vật cản trên
+    for (int i = 0; i < vatcan1.length; i++){
+      setState(() {
+        vatcan1[i] -=0.05;
+      });
+
+      if(vatcan1[i] < -1.5 ){
+        vatcan1[i] += 3;
+      }
+    }
+    // di chuyển vật cản dưới
+    for (int i = 0; i < vatcan2.length; i++){
+      setState(() {
+        vatcan2[i] -=0.05;
+      });
+
+      if(vatcan2[i] < -1.5 ){
+        vatcan2[i] += 3;
+      }
+    }
+  }
 
   void jump(){
     setState(() {
@@ -38,21 +79,9 @@ class _HomePageState extends State<HomePage> {
         amongaxis = intiaHeight - height;
 
       });
-      //vật cản di chuyển
-      setState(() {
-        if(x1 < -2){
-          x1 += 3.5;
-        }else{
-          x1 -= 0.05;
-        }
-      });
-      setState(() {
-        if(x2 < -2){
-          x2 += 3.5;
-        }else{
-          x2 -= 0.05;
-        }
-      });
+
+      moveMap();
+      time += 0.01;
 
 
       if(amongaxis > 1) {
@@ -78,51 +107,58 @@ class _HomePageState extends State<HomePage> {
         body: Column(
           children: [
             Expanded(
-              flex: 2,
-              child: Stack(
-                children: [
-                  AnimatedContainer(
-                    alignment: Alignment(0,amongaxis),
-                    duration: Duration(milliseconds: 0),
-                    color: Colors.blueGrey,
-                    child: Amongus(),
+              flex: 3,
+              child: Container(
+                color: Colors.blueGrey,
+                child: Center(
+                  child: Stack(
+                    children: [
+                      Amongus(
+                        among: amongaxis,
+                          amongHeight: amongHeight,
+                          amongWidth: amongWidth
+                      ),
+
+                      Container(
+                        alignment: Alignment(0,-0.2),
+                        child: gameHasStarted ? Text(" ") : Text("NHẤN ĐỂ BẮT ĐẦU",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                      ),
+
+                      //Tạo vật cản
+                      //vật cản 1 top
+                      Vatcan(
+                        vatcan1: vatcan1[0],
+                          vatcanHeight1: vatcanHeight1[0][0],
+                          vatcanWidth1: vatcanWidth1,
+                          isThisBottomVatcan1: false,
+                      ),
+                      //vật cản 1 dưới
+                      Vatcan2(
+                          vatcan2: vatcan2[0],
+                          vatcanHeight2: vatcanHeight2[0][1],
+                          vatcanWidth2: vatcanWidth2,
+                          isThisBottomVatcan2: true,
+                      ),
+                      //vật cản 2 top
+                      Vatcan(
+                        vatcan1: vatcan1[1],
+                        vatcanHeight1: vatcanHeight1[1][0],
+                        vatcanWidth1: vatcanWidth1,
+                        isThisBottomVatcan1: false,
+                      ),
+                      //vật cản 2 dưới
+                      Vatcan2(
+                        vatcan2: vatcan2[1],
+                        vatcanHeight2: vatcanHeight2[1][1],
+                        vatcanWidth2: vatcanWidth2,
+                        isThisBottomVatcan2: true,
+                      ),
+
+                    ],
                   ),
-                  Container(
-                    alignment: Alignment(0,-0.2),
-                    child: gameHasStarted ? Text(" ") : Text("NHẤN ĐỂ BẮT ĐẦU",
-                      style: TextStyle(fontSize: 20, color: Colors.white),
-                    ),
-                  ),
-                  //Tạo vật cản
-                  AnimatedContainer(
-                    alignment: Alignment(x1,1.2),
-                      duration: Duration(milliseconds: 0),
-                    child: Vatcan(
-                      size: 180.0,
-                    ),
-                  ),
-                  AnimatedContainer(
-                    alignment: Alignment(x1,-1.2),
-                    duration: Duration(milliseconds: 0),
-                    child: Vatcan2(
-                      size: 180.0,
-                    ),
-                  ),
-                  AnimatedContainer(
-                    alignment: Alignment(x2,1.2),
-                    duration: Duration(milliseconds: 0),
-                    child: Vatcan(
-                      size: 150.0,
-                    ),
-                  ),
-                  AnimatedContainer(
-                    alignment: Alignment(x2,-1.2),
-                    duration: Duration(milliseconds: 0),
-                    child: Vatcan2(
-                      size: 230.0,
-                    ),
-                  ),
-                ],
+                ),
               )
             ),
             Expanded(
