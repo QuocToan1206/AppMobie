@@ -117,8 +117,13 @@ class _HomePageState extends State<HomePage> {
   ];
   List<int> foods = [];
 
+<<<<<<< HEAD
   void startGame() {
     getFood();
+=======
+  //bắt đầu
+  void startGame(){
+>>>>>>> 3310fa950b44eedf40992eb9fdde4cf7177812b2
     Timer.periodic(Duration(milliseconds: 300), (timer) {
       if (foods.contains(nv)) {
         foods.remove(nv);
@@ -183,6 +188,7 @@ class _HomePageState extends State<HomePage> {
           //Điểm với play
           Expanded(
               child: Container(
+<<<<<<< HEAD
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -199,6 +205,18 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ))
+=======
+                child: Row(
+                  mainAxisAlignment:  MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text("Điểm: ",style: TextStyle(color: Colors.white, fontSize: 40),),
+                    GestureDetector(
+                        onTap: startGame ,//nhấn vào chữ bắt đầu để chạy lệnh
+                        child: Text("P L A Y ", style: TextStyle(color: Colors.white, fontSize: 40),)),
+                  ],
+                  ),
+              ))
+>>>>>>> 3310fa950b44eedf40992eb9fdde4cf7177812b2
         ],
       ),
     );
