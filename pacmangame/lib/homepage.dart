@@ -14,8 +14,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static int numberInRow = 11;
+<<<<<<< HEAD
   int numberOfSquares = numberInRow * 16;
   int nv = numberInRow * 14 + 1;
+=======
+  int numberOfSquares = numberInRow * 17;
+  int nv = numberInRow * 15 + 1;
+>>>>>>> f670bc0fff442aa722c54d492b5be8b403a045d1
 
   List<int> barriers = [
     0,
@@ -44,16 +49,6 @@ class _HomePageState extends State<HomePage> {
     143,
     154,
     165,
-    166,
-    167,
-    168,
-    169,
-    170,
-    171,
-    172,
-    173,
-    174,
-    175,
     21,
     32,
     43,
@@ -114,6 +109,22 @@ class _HomePageState extends State<HomePage> {
     148,
     149,
     151,
+    176,
+    177,
+    178,
+    179,
+    180,
+    181,
+    182,
+    183,
+    184,
+    185,
+    186,
+    175,
+    156,
+    158,
+    160,
+    162,
   ];
   List<int> foods = [];
 
@@ -165,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                           outerColor: Colors.blue[800],
                           //child: Text(index.toString()),
                         );
-                      } else if (foods.contains(index)) {
+                      } else if (!foods.contains(index)) {
                         return doan(
                           innerColor: Colors.yellow[500],
                           outerColor: Colors.black,
