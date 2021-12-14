@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:pacmangame/an.dart';
+import 'package:pacmangame/ghost.dart';
 import 'package:pacmangame/nhanvat.dart';
 import 'package:pacmangame/vatcan.dart';
+import 'ghost.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,8 +17,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   static int numberInRow = 11;
   int numberOfSquares = numberInRow * 17;
-  int nv = numberInRow * 15 + 1;
+  int nv = 166; //numberInRow * 15 + 1;
   bool nvclose = false;
+  bool gameStarted = true;
+  int ghost = 20;
   List<int> foods = [];
   bool pregame = true;
   int score = 0;
@@ -124,21 +128,157 @@ class _HomePageState extends State<HomePage> {
     151,
     162
   ];
+
+  String phuonghuong = 'right';
+
   void startGame() {
+
     pregame = false;
     getFood();
-    Timer.periodic(Duration(milliseconds: 300), (timer) {
+    moveGhost();
+    gameStarted = true;
+    Timer.periodic(Duration(milliseconds: 500), (timer) {
+
+      switch(phuonghuong){
+
+        case  "up":
+          moveUp();
+        break;
+        case  "down":
+          moveDown();
+        break;
+        case  "right":
+          moveRight();
+          break;
+        case  "left":
+          moveLeft();
+          break;
+      }
+      if(ghost == nv ){
+        _showDialog();
+      }
+
       if (foods.contains(nv)) {
         foods.remove(nv);
         score++;
       }
 
-      if (!barriers.contains(nv + 1)) {
-        setState(() {
-          nv++;
-        });
+
+    });
+  }
+  void resetGame() {
+    Navigator.pop(context);
+    setState(() {
+      nv = 166;
+      ghost = 20;
+      pregame = true;
+      gameStarted = false;
+      score = 0;
+      startGame();
+
+    });
+  }
+
+  //di chuyển chuột
+  void moveLeft(){
+    if (!barriers.contains(nv - 1)) {
+      setState(() {
+        nv--;
+      });
+    }
+  }
+  void moveRight(){
+    if (!barriers.contains(nv + 1)) {
+      setState(() {
+        nv++;
+      });
+    }
+  }
+  void moveUp(){
+    if (!barriers.contains(nv - numberInRow)) {
+      setState(() {
+        nv -= numberInRow;
+      });
+    }
+  }
+  void moveDown(){if (!barriers.contains(nv + numberInRow)) {
+    setState(() {
+      nv += numberInRow;
+    });
+  }}
+
+  //di chuyển quái
+  String ghostDirection = "left";
+  void moveGhost(){
+    Duration ghostSpeed = Duration(milliseconds: 900);
+    Timer.periodic(ghostSpeed, (timer) {
+      if (!barriers.contains(ghost - 1) && ghostDirection != "right"){
+        ghostDirection = "left";
+      }else if (!barriers.contains(ghost - numberInRow) && ghostDirection != "down") {
+        ghostDirection = "up";
+      }else if (!barriers.contains(ghost + numberInRow) && ghostDirection != "up") {
+        ghostDirection = "down";
+      }else if (!barriers.contains(ghost + 1) && ghostDirection != "left") {
+        ghostDirection = "right";
+      }
+      switch (ghostDirection) {
+        case "right":
+          setState(() {
+            ghost++;
+          });
+          break;
+
+        case "up":
+          setState(() {
+            ghost -= numberInRow;
+          });
+          break;
+
+        case "left":
+          setState(() {
+            ghost--;
+          });
+          break;
+
+        case "down":
+          setState(() {
+            ghost += numberInRow;
+          });
+          break;
       }
     });
+  }
+  void _showDialog() {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: Colors.brown,
+            title: Center(
+              child: Text(
+                "G A M E  O V E R",
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            actions: [
+              GestureDetector(
+                onTap: resetGame,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Container(
+                    padding: EdgeInsets.all(7),
+                    color: Colors.white,
+                    child: Text(
+                      'PLAY AGAIN',
+                      style: TextStyle(color: Colors.brown),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+        });
   }
 
   void getFood() {
@@ -158,35 +298,56 @@ class _HomePageState extends State<HomePage> {
         children: [
           Expanded(
               flex: 6,
-              child: Container(
-                child: GridView.builder(
-                    physics:
-                        NeverScrollableScrollPhysics(), // không cho di chuyển lưới bằng tay
-                    itemCount: numberOfSquares,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: numberInRow),
-                    itemBuilder: (BuildContext contex, int index) {
-                      if (nv == index) {
-                        return NhanVat();
-                      } else if (barriers.contains(index)) {
-                        return Vatcan(
-                          innerColor: Colors.blue[500],
-                          outerColor: Colors.blue[800],
-                          // child: Text(index.toString()),
-                        );
-                      } else if (foods.contains(index) || pregame) {
-                        return doan(
-                          innerColor: Colors.yellow[500],
-                          outerColor: Colors.black,
-                          // child: Text(index.toString()),
-                        );
-                      } else {
-                        return doan(
-                          innerColor: Colors.black,
-                          outerColor: Colors.black,
-                        );
-                      }
-                    }),
+              child: GestureDetector(
+                // hướng di chuyển
+                onVerticalDragUpdate: (details){
+                  if (details.delta.dy > 0){
+                    phuonghuong = "down";
+
+                  }else if (details.delta.dy < 0){
+                    phuonghuong = "up";
+                  }
+                },
+                onHorizontalDragUpdate: (details){
+                  if (details.delta.dx > 0){
+                    phuonghuong = "right";
+
+                  }else if (details.delta.dx < 0){
+                    phuonghuong = "left";
+                  }
+                },
+                child: Container(
+                  child: GridView.builder(
+                      physics:
+                          NeverScrollableScrollPhysics(), // không cho di chuyển lưới bằng tay
+                      itemCount: numberOfSquares,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: numberInRow),
+                      itemBuilder: (BuildContext contex, int index) {
+                        if (nv == index) {
+                          return NhanVat();
+                        }else if (ghost == index) {
+                          return Ghost();
+                        }else if (barriers.contains(index)) {
+                          return Vatcan(
+                            innerColor: Colors.blue[500],
+                            outerColor: Colors.blue[800],
+                            // child: Text(index.toString()),
+                          );
+                        } else if (foods.contains(index) || pregame) {
+                          return doan(
+                            innerColor: Colors.yellow[500],
+                            outerColor: Colors.black,
+                            // child: Text(index.toString()),
+                          );
+                        } else {
+                          return doan(
+                            innerColor: Colors.black,
+                            outerColor: Colors.black,
+                          );
+                        }
+                      }),
+                ),
               )),
           //Điểm với play
           Expanded(
