@@ -136,7 +136,7 @@ class _HomePageState extends State<HomePage> {
     getFood();
     moveGhost();
     // gameStarted = true;
-    Timer.periodic(Duration(milliseconds: 1000), (timer) {
+    Timer.periodic(Duration(milliseconds: 900), (timer) {
       switch (phuonghuong) {
         case "up":
           moveUp();
@@ -166,12 +166,12 @@ class _HomePageState extends State<HomePage> {
     Navigator.pop(context);
     setState(() {
       pregame = true;
+      nv = 166;
+      phuonghuong = "right";
+      ghost = 20;
+      foods.clear();
+      score = 0;
     });
-    nv = 166;
-    ghost = 20;
-    foods.clear();
-    // gameStarted = false;
-    score = 0;
   }
 
   //di chuyển chuột
