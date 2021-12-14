@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
   int numberOfSquares = numberInRow * 17;
   int nv = 166; //numberInRow * 15 + 1;
   bool nvclose = false;
-  bool gameStarted = true;
+  // bool gameStarted = true;
   int ghost = 20;
   List<int> foods = [];
   bool pregame = true;
@@ -132,29 +132,26 @@ class _HomePageState extends State<HomePage> {
   String phuonghuong = 'right';
 
   void startGame() {
-
     pregame = false;
     getFood();
     moveGhost();
-    gameStarted = true;
-    Timer.periodic(Duration(milliseconds: 500), (timer) {
-
-      switch(phuonghuong){
-
-        case  "up":
+    // gameStarted = true;
+    Timer.periodic(Duration(milliseconds: 1000), (timer) {
+      switch (phuonghuong) {
+        case "up":
           moveUp();
-        break;
-        case  "down":
+          break;
+        case "down":
           moveDown();
-        break;
-        case  "right":
+          break;
+        case "right":
           moveRight();
           break;
-        case  "left":
+        case "left":
           moveLeft();
           break;
       }
-      if(ghost == nv ){
+      if (ghost == nv) {
         _showDialog();
       }
 
@@ -162,63 +159,68 @@ class _HomePageState extends State<HomePage> {
         foods.remove(nv);
         score++;
       }
-
-
     });
   }
+
   void resetGame() {
     Navigator.pop(context);
     setState(() {
-      nv = 166;
-      ghost = 20;
       pregame = true;
-      gameStarted = false;
-      score = 0;
-      startGame();
-
     });
+    nv = 166;
+    ghost = 20;
+    foods.clear();
+    // gameStarted = false;
+    score = 0;
   }
 
   //di chuyển chuột
-  void moveLeft(){
+  void moveLeft() {
     if (!barriers.contains(nv - 1)) {
       setState(() {
         nv--;
       });
     }
   }
-  void moveRight(){
+
+  void moveRight() {
     if (!barriers.contains(nv + 1)) {
       setState(() {
         nv++;
       });
     }
   }
-  void moveUp(){
+
+  void moveUp() {
     if (!barriers.contains(nv - numberInRow)) {
       setState(() {
         nv -= numberInRow;
       });
     }
   }
-  void moveDown(){if (!barriers.contains(nv + numberInRow)) {
-    setState(() {
-      nv += numberInRow;
-    });
-  }}
+
+  void moveDown() {
+    if (!barriers.contains(nv + numberInRow)) {
+      setState(() {
+        nv += numberInRow;
+      });
+    }
+  }
 
   //di chuyển quái
   String ghostDirection = "left";
-  void moveGhost(){
-    Duration ghostSpeed = Duration(milliseconds: 900);
+  void moveGhost() {
+    Duration ghostSpeed = Duration(milliseconds: 1000);
     Timer.periodic(ghostSpeed, (timer) {
-      if (!barriers.contains(ghost - 1) && ghostDirection != "right"){
+      if (!barriers.contains(ghost - 1) && ghostDirection != "right") {
         ghostDirection = "left";
-      }else if (!barriers.contains(ghost - numberInRow) && ghostDirection != "down") {
+      } else if (!barriers.contains(ghost - numberInRow) &&
+          ghostDirection != "down") {
         ghostDirection = "up";
-      }else if (!barriers.contains(ghost + numberInRow) && ghostDirection != "up") {
+      } else if (!barriers.contains(ghost + numberInRow) &&
+          ghostDirection != "up") {
         ghostDirection = "down";
-      }else if (!barriers.contains(ghost + 1) && ghostDirection != "left") {
+      } else if (!barriers.contains(ghost + 1) && ghostDirection != "left") {
         ghostDirection = "right";
       }
       switch (ghostDirection) {
@@ -248,6 +250,7 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
+
   void _showDialog() {
     showDialog(
         context: context,
@@ -300,19 +303,17 @@ class _HomePageState extends State<HomePage> {
               flex: 6,
               child: GestureDetector(
                 // hướng di chuyển
-                onVerticalDragUpdate: (details){
-                  if (details.delta.dy > 0){
+                onVerticalDragUpdate: (details) {
+                  if (details.delta.dy > 0) {
                     phuonghuong = "down";
-
-                  }else if (details.delta.dy < 0){
+                  } else if (details.delta.dy < 0) {
                     phuonghuong = "up";
                   }
                 },
-                onHorizontalDragUpdate: (details){
-                  if (details.delta.dx > 0){
+                onHorizontalDragUpdate: (details) {
+                  if (details.delta.dx > 0) {
                     phuonghuong = "right";
-
-                  }else if (details.delta.dx < 0){
+                  } else if (details.delta.dx < 0) {
                     phuonghuong = "left";
                   }
                 },
@@ -326,9 +327,9 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (BuildContext contex, int index) {
                         if (nv == index) {
                           return NhanVat();
-                        }else if (ghost == index) {
+                        } else if (ghost == index) {
                           return Ghost();
-                        }else if (barriers.contains(index)) {
+                        } else if (barriers.contains(index)) {
                           return Vatcan(
                             innerColor: Colors.blue[500],
                             outerColor: Colors.blue[800],
