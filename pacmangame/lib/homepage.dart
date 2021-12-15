@@ -19,7 +19,6 @@ class _HomePageState extends State<HomePage> {
   int numberOfSquares = numberInRow * 17;
   int nv = 166; //numberInRow * 15 + 1;
   bool nvclose = false;
-  // bool gameStarted = true;
   int ghost = 20;
   List<int> foods = [];
   bool pregame = true;
@@ -128,15 +127,21 @@ class _HomePageState extends State<HomePage> {
     151,
     162
   ];
-
-  String phuonghuong = 'right';
-
+  String phuonghuong = "";
   void startGame() {
+    nv = 165;
+    score = 0;
+    ghost = 21;
+    foods.clear();
+    phuonghuong = 'right';
     pregame = false;
     getFood();
     moveGhost();
-    // gameStarted = true;
-    Timer.periodic(Duration(milliseconds: 900), (timer) {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if (foods.contains(nv)) {
+        foods.remove(nv);
+        score++;
+      }
       switch (phuonghuong) {
         case "up":
           moveUp();
@@ -152,12 +157,9 @@ class _HomePageState extends State<HomePage> {
           break;
       }
       if (ghost == nv) {
+        ghostDirection = "";
+        phuonghuong = "";
         _showDialog();
-      }
-
-      if (foods.contains(nv)) {
-        foods.remove(nv);
-        score++;
       }
     });
   }
@@ -166,11 +168,6 @@ class _HomePageState extends State<HomePage> {
     Navigator.pop(context);
     setState(() {
       pregame = true;
-      nv = 166;
-      phuonghuong = "right";
-      ghost = 20;
-      foods.clear();
-      score = 0;
     });
   }
 
@@ -208,9 +205,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   //di chuyển quái
-  String ghostDirection = "left";
+  String ghostDirection = "";
   void moveGhost() {
-    Duration ghostSpeed = Duration(milliseconds: 1000);
+    ghostDirection = "left";
+    Duration ghostSpeed = Duration(seconds: 1);
     Timer.periodic(ghostSpeed, (timer) {
       if (!barriers.contains(ghost - 1) && ghostDirection != "right") {
         ghostDirection = "left";
