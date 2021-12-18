@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> {
   void startGame() {
     nv = 165;
     score = 0;
-    ghost = 21;
+    ghost = 20;
     foods.clear();
     phuonghuong = 'right';
     pregame = false;
