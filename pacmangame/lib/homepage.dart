@@ -20,7 +20,8 @@ class _HomePageState extends State<HomePage> {
   int nv = 166; //numberInRow * 15 + 1;
   bool nvclose = false;
   bool gameStarted = true;
-  int ghost = 20;
+  int ghost = 12;
+  int ghost1 = 73;
   List<int> foods = [];
   bool pregame = true;
   int score = 0;
@@ -136,8 +137,9 @@ class _HomePageState extends State<HomePage> {
     pregame = false;
     getFood();
     moveGhost();
-    gameStarted = true;
-    Timer.periodic(Duration(milliseconds: 500), (timer) {
+    moveGhost1();
+    //gameStarted = true;
+    Timer.periodic(Duration(milliseconds: 600), (timer) {
 
       switch(phuonghuong){
 
@@ -170,11 +172,12 @@ class _HomePageState extends State<HomePage> {
     Navigator.pop(context);
     setState(() {
       nv = 166;
-      ghost = 20;
+      ghost = 12;
       pregame = true;
       gameStarted = false;
       score = 0;
-      startGame();
+      //startGame();
+
 
     });
   }
@@ -210,7 +213,7 @@ class _HomePageState extends State<HomePage> {
   //di chuyển quái
   String ghostDirection = "left";
   void moveGhost(){
-    Duration ghostSpeed = Duration(milliseconds: 900);
+    Duration ghostSpeed = Duration(milliseconds: 1100);
     Timer.periodic(ghostSpeed, (timer) {
       if (!barriers.contains(ghost - 1) && ghostDirection != "right"){
         ghostDirection = "left";
@@ -245,6 +248,81 @@ class _HomePageState extends State<HomePage> {
             ghost += numberInRow;
           });
           break;
+      }
+    });
+  }
+
+  String ghostDirection1 = "right";
+  void moveGhost1(){
+    Duration ghostSpeed = Duration(milliseconds: 1100);
+    Timer.periodic(ghostSpeed, (timer) {
+
+      if (!barriers.contains(ghost1 + 1) && ghostDirection1 != "left") {
+        ghostDirection1 = "left";
+      }/*else if (!barriers.contains(ghost1 - 1) && ghostDirection1 != "right") {
+        ghostDirection1 = "up";
+      }*/else if (!barriers.contains(ghost1 + numberInRow) && ghostDirection1 != "right") {
+        ghostDirection1 = "up";
+      }
+
+      /*if (!barriers.contains(ghost1 - 1) && ghostDirection1 != "right") {
+        ghostDirection1 = "up";
+      }else if (!barriers.contains(ghost1 + 1) && ghostDirection1 != "left") {
+        ghostDirection1 = "left";
+      }*/
+
+      /*if (!barriers.contains(ghost1 - 1) && ghostDirection1 != "left"){
+        ghostDirection1 = "right";
+      }else if (!barriers.contains(ghost1 - numberInRow) && ghostDirection1 != "down") {
+        ghostDirection1 = "up";
+      }else if (!barriers.contains(ghost1 + numberInRow) && ghostDirection1 != "up") {
+        ghostDirection1 = "down";
+      }else if (!barriers.contains(ghost1 + 1) && ghostDirection1 != "left") {
+        ghostDirection1 = "right";
+      }*/
+      switch (ghostDirection1) {
+
+
+        case "left":
+          setState(() {
+            ghost1++;
+          });
+          break;
+        case "right":
+          setState(() {
+            ghost1 += numberInRow;
+          });
+          break;
+        case "up":
+          setState(() {
+            ghost1 -= numberInRow;
+          });
+          break;
+
+
+        /*case "right":
+          setState(() {
+            ghost1++;
+          });
+          break;
+
+        case "up":
+          setState(() {
+            ghost1 -= numberInRow;
+          });
+          break;
+
+        case "left":
+          setState(() {
+            ghost1--;
+          });
+          break;
+
+        case "down":
+          setState(() {
+            ghost1 += numberInRow;
+          });
+          break;*/
       }
     });
   }
@@ -328,6 +406,8 @@ class _HomePageState extends State<HomePage> {
                           return NhanVat();
                         }else if (ghost == index) {
                           return Ghost();
+                        }else if (ghost1 == index) {
+                          return Ghost1();
                         }else if (barriers.contains(index)) {
                           return Vatcan(
                             innerColor: Colors.blue[500],

@@ -10,3 +10,13 @@ class Ghost extends StatelessWidget {
     );
   }
 }
+class Ghost1 extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(padding: const EdgeInsets.all(4.0),
+      child: Image.asset('lib/hinh/ghost1.png'),
+    );
+  }
+}
