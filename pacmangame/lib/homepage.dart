@@ -140,6 +140,10 @@ class _HomePageState extends State<HomePage> {
     //moveGhost1();
     //gameStarted = true;
     Timer.periodic(Duration(milliseconds: 600), (timer) {
+      if (foods.contains(nv)) {
+        foods.remove(nv);
+        score += 1;
+      }
       switch (phuonghuong) {
         case "up":
           moveUp();
