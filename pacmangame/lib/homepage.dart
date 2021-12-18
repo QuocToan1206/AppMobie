@@ -19,7 +19,8 @@ class _HomePageState extends State<HomePage> {
   int numberOfSquares = numberInRow * 17;
   int nv = 166; //numberInRow * 15 + 1;
   bool nvclose = false;
-  int ghost = 20;
+  int ghost = 12;
+  int ghost1 = 20;
   List<int> foods = [];
   bool pregame = true;
   int score = 0;
@@ -131,13 +132,13 @@ class _HomePageState extends State<HomePage> {
   void startGame() {
     nv = 165;
     score = 0;
-    ghost = 21;
+    ghost = 12;
     foods.clear();
     phuonghuong = 'right';
     pregame = false;
     getFood();
     moveGhost();
-    //moveGhost1();
+    moveGhost1();
     //gameStarted = true;
     Timer.periodic(Duration(milliseconds: 600), (timer) {
       if (foods.contains(nv)) {
@@ -158,8 +159,9 @@ class _HomePageState extends State<HomePage> {
           moveLeft();
           break;
       }
-      if (ghost == nv) {
+      if (ghost == nv || ghost1 == nv) {
         ghostDirection = "";
+        ghostDirection1 = "";
         phuonghuong = "";
         _showDialog();
       }
@@ -256,6 +258,50 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  //di chuyển quái
+  String ghostDirection1 = "";
+  void moveGhost1() {
+    ghostDirection1 = "down";
+    Duration ghostSpeed = Duration(seconds: 1);
+    Timer.periodic(ghostSpeed, (timer) {
+      if (!barriers.contains(ghost1 + numberInRow) && ghostDirection1 != "up") {
+        ghostDirection1 = "down";
+      } else if (!barriers.contains(ghost1 + 1) && ghostDirection1 != "left") {
+        ghostDirection1 = "right";
+      } else if (!barriers.contains(ghost1 - numberInRow) &&
+          ghostDirection1 != "down") {
+        ghostDirection1 = "up";
+      } else if (!barriers.contains(ghost1 - 1) && ghostDirection1 != "right") {
+        ghostDirection1 = "left";
+      }
+      switch (ghostDirection1) {
+        case "right":
+          setState(() {
+            ghost1++;
+          });
+          break;
+
+        case "up":
+          setState(() {
+            ghost1 -= numberInRow;
+          });
+          break;
+
+        case "left":
+          setState(() {
+            ghost1--;
+          });
+          break;
+
+        case "down":
+          setState(() {
+            ghost1 += numberInRow;
+          });
+          break;
+      }
+    });
+  }
+
   void _showDialog() {
     showDialog(
         context: context,
@@ -334,6 +380,8 @@ class _HomePageState extends State<HomePage> {
                           return NhanVat();
                         } else if (ghost == index) {
                           return Ghost();
+                        } else if (ghost1 == index) {
+                          return Ghost1();
                         } else if (barriers.contains(index)) {
                           return Vatcan(
                             innerColor: Colors.blue[500],
