@@ -19,9 +19,7 @@ class _HomePageState extends State<HomePage> {
   int numberOfSquares = numberInRow * 17;
   int nv = 166; //numberInRow * 15 + 1;
   bool nvclose = false;
-  bool gameStarted = true;
-  int ghost = 12;
-  int ghost1 = 73;
+  int ghost = 20;
   List<int> foods = [];
   bool pregame = true;
   int score = 0;
@@ -129,99 +127,101 @@ class _HomePageState extends State<HomePage> {
     151,
     162
   ];
-
-  String phuonghuong = 'right';
-
+  String phuonghuong = "";
   void startGame() {
-
+    nv = 165;
+    score = 0;
+    ghost = 21;
+    foods.clear();
+    phuonghuong = 'right';
     pregame = false;
     getFood();
     moveGhost();
-    moveGhost1();
+    //moveGhost1();
     //gameStarted = true;
     Timer.periodic(Duration(milliseconds: 600), (timer) {
-
-      switch(phuonghuong){
-
-        case  "up":
+      switch (phuonghuong) {
+        case "up":
           moveUp();
-        break;
-        case  "down":
+          break;
+        case "down":
           moveDown();
-        break;
-        case  "right":
+          break;
+        case "right":
           moveRight();
           break;
-        case  "left":
+        case "left":
           moveLeft();
           break;
       }
-      if(ghost == nv ){
+      if (ghost == nv) {
+        ghostDirection = "";
+        phuonghuong = "";
         _showDialog();
       }
-
-      if (foods.contains(nv)) {
-        foods.remove(nv);
-        score++;
-      }
-
-
     });
   }
+
   void resetGame() {
     Navigator.pop(context);
     setState(() {
       nv = 166;
       ghost = 12;
       pregame = true;
-      gameStarted = false;
+      //gameStarted = false;
       score = 0;
       //startGame();
-
-
     });
   }
 
   //di chuyển chuột
-  void moveLeft(){
+  void moveLeft() {
     if (!barriers.contains(nv - 1)) {
       setState(() {
         nv--;
       });
     }
   }
-  void moveRight(){
+
+  void moveRight() {
     if (!barriers.contains(nv + 1)) {
       setState(() {
         nv++;
       });
     }
   }
-  void moveUp(){
+
+  void moveUp() {
     if (!barriers.contains(nv - numberInRow)) {
       setState(() {
         nv -= numberInRow;
       });
     }
   }
-  void moveDown(){if (!barriers.contains(nv + numberInRow)) {
-    setState(() {
-      nv += numberInRow;
-    });
-  }}
+
+  void moveDown() {
+    if (!barriers.contains(nv + numberInRow)) {
+      setState(() {
+        nv += numberInRow;
+      });
+    }
+  }
 
   //di chuyển quái
-  String ghostDirection = "left";
-  void moveGhost(){
-    Duration ghostSpeed = Duration(milliseconds: 1100);
+  String ghostDirection = "";
+  void moveGhost() {
+    ghostDirection = "left";
+    Duration ghostSpeed = Duration(seconds: 1);
     Timer.periodic(ghostSpeed, (timer) {
-      if (!barriers.contains(ghost - 1) && ghostDirection != "right"){
+      if (!barriers.contains(ghost - 1) && ghostDirection != "right") {
         ghostDirection = "left";
-      }else if (!barriers.contains(ghost - numberInRow) && ghostDirection != "down") {
+      } else if (!barriers.contains(ghost - numberInRow) &&
+          ghostDirection != "down") {
         ghostDirection = "up";
-      }else if (!barriers.contains(ghost + numberInRow) && ghostDirection != "up") {
+      } else if (!barriers.contains(ghost + numberInRow) &&
+          ghostDirection != "up") {
         ghostDirection = "down";
-      }else if (!barriers.contains(ghost + 1) && ghostDirection != "left") {
+      } else if (!barriers.contains(ghost + 1) && ghostDirection != "left") {
         ghostDirection = "right";
       }
       switch (ghostDirection) {
@@ -252,80 +252,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  String ghostDirection1 = "right";
-  void moveGhost1(){
-    Duration ghostSpeed = Duration(milliseconds: 1100);
-    Timer.periodic(ghostSpeed, (timer) {
-
-      if (!barriers.contains(ghost1 + 1) && ghostDirection1 != "left") {
-        ghostDirection1 = "left";
-      }/*else if (!barriers.contains(ghost1 - 1) && ghostDirection1 != "right") {
-        ghostDirection1 = "up";
-      }*/else if (!barriers.contains(ghost1 + numberInRow) && ghostDirection1 != "right") {
-        ghostDirection1 = "up";
-      }
-
-      /*if (!barriers.contains(ghost1 - 1) && ghostDirection1 != "right") {
-        ghostDirection1 = "up";
-      }else if (!barriers.contains(ghost1 + 1) && ghostDirection1 != "left") {
-        ghostDirection1 = "left";
-      }*/
-
-      /*if (!barriers.contains(ghost1 - 1) && ghostDirection1 != "left"){
-        ghostDirection1 = "right";
-      }else if (!barriers.contains(ghost1 - numberInRow) && ghostDirection1 != "down") {
-        ghostDirection1 = "up";
-      }else if (!barriers.contains(ghost1 + numberInRow) && ghostDirection1 != "up") {
-        ghostDirection1 = "down";
-      }else if (!barriers.contains(ghost1 + 1) && ghostDirection1 != "left") {
-        ghostDirection1 = "right";
-      }*/
-      switch (ghostDirection1) {
-
-
-        case "left":
-          setState(() {
-            ghost1++;
-          });
-          break;
-        case "right":
-          setState(() {
-            ghost1 += numberInRow;
-          });
-          break;
-        case "up":
-          setState(() {
-            ghost1 -= numberInRow;
-          });
-          break;
-
-
-        /*case "right":
-          setState(() {
-            ghost1++;
-          });
-          break;
-
-        case "up":
-          setState(() {
-            ghost1 -= numberInRow;
-          });
-          break;
-
-        case "left":
-          setState(() {
-            ghost1--;
-          });
-          break;
-
-        case "down":
-          setState(() {
-            ghost1 += numberInRow;
-          });
-          break;*/
-      }
-    });
-  }
   void _showDialog() {
     showDialog(
         context: context,
@@ -378,19 +304,17 @@ class _HomePageState extends State<HomePage> {
               flex: 6,
               child: GestureDetector(
                 // hướng di chuyển
-                onVerticalDragUpdate: (details){
-                  if (details.delta.dy > 0){
+                onVerticalDragUpdate: (details) {
+                  if (details.delta.dy > 0) {
                     phuonghuong = "down";
-
-                  }else if (details.delta.dy < 0){
+                  } else if (details.delta.dy < 0) {
                     phuonghuong = "up";
                   }
                 },
-                onHorizontalDragUpdate: (details){
-                  if (details.delta.dx > 0){
+                onHorizontalDragUpdate: (details) {
+                  if (details.delta.dx > 0) {
                     phuonghuong = "right";
-
-                  }else if (details.delta.dx < 0){
+                  } else if (details.delta.dx < 0) {
                     phuonghuong = "left";
                   }
                 },
@@ -404,11 +328,9 @@ class _HomePageState extends State<HomePage> {
                       itemBuilder: (BuildContext contex, int index) {
                         if (nv == index) {
                           return NhanVat();
-                        }else if (ghost == index) {
+                        } else if (ghost == index) {
                           return Ghost();
-                        }else if (ghost1 == index) {
-                          return Ghost1();
-                        }else if (barriers.contains(index)) {
+                        } else if (barriers.contains(index)) {
                           return Vatcan(
                             innerColor: Colors.blue[500],
                             outerColor: Colors.blue[800],
