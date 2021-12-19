@@ -5,7 +5,6 @@ import 'package:flappygame/Screen.dart';
 import 'package:flappygame/vatcan.dart';
 import 'package:flutter/material.dart';
 
-
 class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
@@ -14,112 +13,111 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   static double amongaxis = 0;
   double time = 0;
-  double height =0;
-  double intiaHeight =amongaxis;
+  double height = 0;
+  double intiaHeight = amongaxis;
   bool gameHasStarted = false; // cài đặt trò chơi
-  double amongWidth = 0.1 ; // chiều rộng
-  double amongHeight = 0.1 ; // chiều dài
+  double amongWidth = 0.1; // chiều rộng
+  double amongHeight = 0.1; // chiều dài
   double trongluc = -4.9;
   double vantoc = 2.8;
   //static double x1 = 1;
   //double x2 = x1 + 1.5;
 
   //khai báo biến rào cản
-  static List<double> vatcan1 = [2, 2 +1.5];
+  static List<double> vatcan1 = [2, 2 + 1.5];
   static double vatcanWidth1 = 0.5;
-  List<List<double>> vatcanHeight1 =[
+  List<List<double>> vatcanHeight1 = [
     [0.6, 0.4],
     [0.4, 0.6]
   ];
 
-  static List<double> vatcan2 = [2, 2 +1.5];
+  static List<double> vatcan2 = [2, 2 + 1.5];
   static double vatcanWidth2 = 0.5;
-  List<List<double>> vatcanHeight2 =[
+  List<List<double>> vatcanHeight2 = [
     [0.6, 0.4],
     [0.4, 0.6]
   ];
 
   //di chuyển vật cản
-  void moveMap(){
+  void moveMap() {
     // di chuyển vật cản trên
-    for (int i = 0; i < vatcan1.length; i++){
+    for (int i = 0; i < vatcan1.length; i++) {
       setState(() {
-        vatcan1[i] -=0.018;
+        vatcan1[i] -= 0.018;
       });
 
-      if(vatcan1[i] < -1.5 ){
+      if (vatcan1[i] < -1.5) {
         vatcan1[i] += 3;
       }
     }
     // di chuyển vật cản dưới
-    for (int i = 0; i < vatcan2.length; i++){
+    for (int i = 0; i < vatcan2.length; i++) {
       setState(() {
-        vatcan2[i] -=0.018;
+        vatcan2[i] -= 0.018;
       });
 
-      if(vatcan2[i] < -1.5 ){
+      if (vatcan2[i] < -1.5) {
         vatcan2[i] += 3;
       }
     }
   }
 
-  void jump(){
+  void jump() {
     setState(() {
       time = 0;
       intiaHeight = amongaxis;
-
     });
   }
-  void resetGame(){
+
+  void resetGame() {
     Navigator.pop(context); // loại bỏ hộp thoại cảnh báo
     // cho tất cả lại thành ban đầu
     setState(() {
       amongaxis = 0;
       gameHasStarted = false;
-      time =0;
+      time = 0;
       intiaHeight = amongaxis;
-      vatcan1 = [2,2+1.5];
-      vatcan2 = [2,2+1.5];
+      vatcan1 = [2, 2 + 1.5];
+      vatcan2 = [2, 2 + 1.5];
     });
   }
-  void _showDialog(){
+
+  void _showDialog() {
     showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext contex){
-        return AlertDialog(
-          backgroundColor:  Colors.brown,
-          title: Center(
-            child: Text(
-              " E N D G A M E ",
-              style: TextStyle(color:  Colors.white),
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext contex) {
+          return AlertDialog(
+            backgroundColor: Colors.brown,
+            title: Center(
+              child: Text(
+                " E N D G A M E ",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
-          ),
-          actions: [
-            GestureDetector(
-              onTap: resetGame,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(5),
-                child: Container(
-                  padding: EdgeInsets.all(7),
-                  color: Colors.white,
-                  child: Text(
-                    'PLAY AGAIN',
-                    style: TextStyle(color: Colors.brown),
+            actions: [
+              GestureDetector(
+                onTap: resetGame,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(5),
+                  child: Container(
+                    padding: EdgeInsets.all(7),
+                    color: Colors.white,
+                    child: Text(
+                      'PLAY AGAIN',
+                      style: TextStyle(color: Colors.brown),
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
-        );
-      }
-    );
+              )
+            ],
+          );
+        });
   }
 
-  void startGame(){
+  void startGame() {
     gameHasStarted = true;
     Timer.periodic(Duration(milliseconds: 10), (timer) {
-
       //tính toán độ rơi nhân vật khi click chuột vào
       height = trongluc * time * time + vantoc * time;
       /*time += 0.04;
@@ -128,7 +126,7 @@ class _HomePageState extends State<HomePage> {
         amongaxis = intiaHeight - height;
       });
       //kiểm tra nhân vật đã chết chưa
-      if(AmongDead()){
+      if (AmongDead()) {
         timer.cancel();
         _showDialog();
       }
@@ -136,28 +134,25 @@ class _HomePageState extends State<HomePage> {
       moveMap();
       time += 0.01;
 
-
-      if(amongaxis > 1) {
+      if (amongaxis > 1) {
         timer.cancel();
         gameHasStarted = false;
       }
     });
   }
 
-  bool AmongDead(){
+  bool AmongDead() {
     //kiểm tra xem nhân vật đã chạm đầu hay cuối màn hình
-    if (amongaxis < -1 || amongaxis >1){
+    if (amongaxis < -1 || amongaxis > 1) {
       return true;
     }
     // chạm vào rào cản
     // kiểm tra xem nhân vật nằm trong tọa độ rào cản ko
-    for( int i = 0; i < vatcan1.length; i++){
-      if(vatcan1[i] <= amongWidth &&
-      vatcan1[i] + vatcanWidth1 >= amongWidth &&
+    for (int i = 0; i < vatcan1.length; i++) {
+      if (vatcan1[i] <= amongWidth &&
+          vatcan1[i] + vatcanWidth1 >= amongWidth &&
           (amongaxis <= -1 + vatcanHeight1[i][0] ||
-              amongaxis + amongHeight >= 1 - vatcanHeight1[i][1]
-          )
-      ){
+              amongaxis + amongHeight >= 1 - vatcanHeight1[i][1])) {
         return true;
       }
     }
@@ -169,89 +164,107 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       //Nhấn được toàn màn hình
       //onTap: gameHasStarted ? jump() : startGame,
-      onTap: (){
-        if (gameHasStarted){
+      onTap: () {
+        if (gameHasStarted) {
           jump();
-        }else{
+        } else {
           startGame();
-
         }
       },
       child: Scaffold(
         body: Column(
           children: [
             Expanded(
-              flex: 3,
-              child: Container(
-                color: Colors.blueGrey,
-                child: Center(
-                  child: Stack(
-                    children: [
-                      Amongus(
-                        among: amongaxis,
-                          amongHeight: amongHeight,
-                          amongWidth: amongWidth
-                      ),
+                flex: 3,
+                child: Container(
+                  color: Colors.blueGrey,
+                  child: Center(
+                    child: Stack(
+                      children: [
+                        Amongus(
+                            among: amongaxis,
+                            amongHeight: amongHeight,
+                            amongWidth: amongWidth),
 
-                      Screen(gameHasStarted),
+                        Screen(gameHasStarted),
 
-                      //Tạo vật cản
-                      //vật cản 1 top
-                      Vatcan(
-                        vatcan1: vatcan1[0],
+                        //Tạo vật cản
+                        //vật cản 1 top
+                        Vatcan(
+                          vatcan1: vatcan1[0],
                           vatcanHeight1: vatcanHeight1[0][0],
                           vatcanWidth1: vatcanWidth1,
                           isThisBottomVatcan1: false,
-                      ),
-                      //vật cản 1 dưới
-                      Vatcan2(
+                        ),
+                        //vật cản 1 dưới
+                        Vatcan2(
                           vatcan2: vatcan2[0],
                           vatcanHeight2: vatcanHeight2[0][1],
                           vatcanWidth2: vatcanWidth2,
                           isThisBottomVatcan2: true,
+                        ),
+                        //vật cản 2 top
+                        Vatcan(
+                          vatcan1: vatcan1[1],
+                          vatcanHeight1: vatcanHeight1[1][0],
+                          vatcanWidth1: vatcanWidth1,
+                          isThisBottomVatcan1: false,
+                        ),
+                        //vật cản 2 dưới
+                        Vatcan2(
+                          vatcan2: vatcan2[1],
+                          vatcanHeight2: vatcanHeight2[1][1],
+                          vatcanWidth2: vatcanWidth2,
+                          isThisBottomVatcan2: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                )),
+            Expanded(
+              child: Container(
+                color: Colors.brown,
+                child: Center(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '0',
+                            style: TextStyle(color: Colors.white, fontSize: 35),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            'ĐIỂM',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ],
                       ),
-                      //vật cản 2 top
-                      Vatcan(
-                        vatcan1: vatcan1[1],
-                        vatcanHeight1: vatcanHeight1[1][0],
-                        vatcanWidth1: vatcanWidth1,
-                        isThisBottomVatcan1: false,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '10',
+                            style: TextStyle(color: Colors.white, fontSize: 35),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Text(
+                            'XẾP HẠNG',
+                            style: TextStyle(color: Colors.white, fontSize: 20),
+                          ),
+                        ],
                       ),
-                      //vật cản 2 dưới
-                      Vatcan2(
-                        vatcan2: vatcan2[1],
-                        vatcanHeight2: vatcanHeight2[1][1],
-                        vatcanWidth2: vatcanWidth2,
-                        isThisBottomVatcan2: true,
-                      ),
-
                     ],
                   ),
                 ),
-              )
-            ),
-            Expanded(
-              child: Container(
-                color: Colors.pinkAccent,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text ("ĐIỂM SỐ  ", style: TextStyle(color: Colors.white,fontSize: 20),),
-                      SizedBox(height: 30,),
-                      Text("0",style: TextStyle(color: Colors.white,fontSize: 35),),
-                    ],),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(" XẾP HẠNG", style: TextStyle(color: Colors.white,fontSize: 20),),
-                      SizedBox(height: 30,),
-                      Text("100" , style: TextStyle(color: Colors.white,fontSize: 35),)],
-                  )],
               ),
-              ),),
+            ),
           ],
         ),
       ),
