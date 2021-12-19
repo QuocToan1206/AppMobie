@@ -20,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   double amongHeight = 0.1; // chiều dài
   double trongluc = -4.9;
   double vantoc = 2.8;
+  int score = 0;
   //static double x1 = 1;
   //double x2 = x1 + 1.5;
 
@@ -117,6 +118,8 @@ class _HomePageState extends State<HomePage> {
 
   void startGame() {
     gameHasStarted = true;
+    score = 0;
+    int i = 0;
     Timer.periodic(Duration(milliseconds: 10), (timer) {
       //tính toán độ rơi nhân vật khi click chuột vào
       height = trongluc * time * time + vantoc * time;
@@ -129,6 +132,12 @@ class _HomePageState extends State<HomePage> {
       if (AmongDead()) {
         timer.cancel();
         _showDialog();
+      } else {
+        i++;
+        if (i == 70) {
+          i = 0;
+          score += 1;
+        }
       }
 
       moveMap();
@@ -232,14 +241,14 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            '0',
+                            score.toString(),
                             style: TextStyle(color: Colors.white, fontSize: 35),
                           ),
                           SizedBox(
                             height: 15,
                           ),
                           Text(
-                            'ĐIỂM',
+                            'ĐIỂM ',
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                         ],
